@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,11 +19,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Define API resource routes for Products
-// This automatically maps:
-// GET /products -> ProductController@index
-// POST /products -> ProductController@store
-// GET /products/{product} -> ProductController@show
-// PUT/PATCH /products/{product} -> ProductController@update
-// DELETE /products/{product} -> ProductController@destroy
-Route::apiResource('products', ProductController::class);
+// Remove the old product routes
+// Route::apiResource('products', ProductController::class);
+
+// Order Routes
+Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'store']);
+Route::put('/orders/{order}', [OrderController::class, 'update']); // Use PUT for full update or PATCH for partial
+Route::get('/orders/stats', [OrderController::class, 'stats']);
