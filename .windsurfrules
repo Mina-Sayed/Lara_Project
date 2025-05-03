@@ -1,0 +1,28 @@
+# ⚙️ Laravel 12 Product API Project Configuration
+
+<project_context>
+- The project is built using Laravel 12 with PHP 8.3+.
+- The database used is PostgreSQL.
+- The application is a RESTful API managing products.
+- The main model is `Product` with fields: id (auto-increment), name (string), price (float), created_at, updated_at.
+</project_context>
+
+<coding_guidelines>
+- Use Eloquent ORM for all model interactions.
+- Always define `$fillable` properties in models to allow mass assignment.
+- Follow the "Fat Models, Skinny Controllers" approach — put business logic in the model, keep controllers simple.
+- Apply validation using `request()->validate()` inside controllers or create dedicated Form Request classes.
+- Use RESTful conventions in routing and resource controllers.
+- Use eager loading (`with()`) when accessing related models to avoid N+1 query issues.
+- Use Laravel Resources (`Http\Resources`) for formatting API responses.
+- Use route model binding for cleaner and more readable code.
+- Always write PHPUnit tests using `RefreshDatabase` for a clean state.
+- Migrate database structure via Artisan commands and version control migrations.
+
+<ai_assistance>
+- When generating models or controllers, include all required namespaces, validation, and response formatting.
+- Suggest meaningful test cases using Laravel's built-in testing tools.
+- Recommend database indexing strategies if performance is a concern.
+- When "optimize" is mentioned, consider query performance, response structure, and memory usage.
+- When asked for "enhancements", suggest adding pagination, filtering, sorting, or soft deletes.
+</ai_assistance>
