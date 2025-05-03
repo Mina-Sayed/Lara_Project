@@ -1,19 +1,22 @@
-# Laravel Product API
+# Laravel Order Management API
 
-A simple RESTful API built with Laravel 12 to manage products (Create, Read, Update, Delete).
+A simple RESTful API built with Laravel 12 to manage Customers and Orders.
 
 ## Project Overview
 
-This project provides basic CRUD functionality for a `Product` resource. It demonstrates core Laravel concepts including Eloquent models, resource controllers, routing, migrations, and environment configuration.
+This project provides basic API functionality for `Customer` and `Order` resources. It demonstrates core Laravel concepts including Eloquent models, relationships (HasMany, BelongsTo), controllers, routing, migrations, seeding, and environment configuration.
 
 ## Features
 
-*   **List Products:** Retrieve all products.
-*   **Create Product:** Add a new product with name and price.
-*   **Show Product:** View details of a specific product.
-*   **Update Product:** Modify the name and price of an existing product.
-*   **Delete Product:** Remove a product.
-*   **Validation:** Ensures `name` (required, string) and `price` (required, numeric) are provided correctly.
+*   **Customers:** (Managed via seeding or potentially future endpoints)
+    *   `id`, `name`, `email`
+*   **Orders:**
+    *   List all orders (with associated customer info).
+    *   Create a new order for an existing customer.
+    *   Update the status (`pending`/`shipped`) of an existing order.
+    *   Get order statistics (total orders and revenue per status).
+*   **Relationships:** `Customer` has many `Orders`, `Order` belongs to a `Customer`.
+*   **Database:** Configured for PostgreSQL (can be changed in `.env`).
 
 ## Setup Instructions
 
@@ -26,7 +29,7 @@ This project provides basic CRUD functionality for a `Product` resource. It demo
 2.  **Install Dependencies:**
     ```bash
     composer install
-    npm install # Optional, if you plan to use frontend assets
+    # npm install (Optional, if you plan to use frontend assets)
     ```
 
 3.  **Configure Environment:**
@@ -53,11 +56,11 @@ This project provides basic CRUD functionality for a `Product` resource. It demo
         QUEUE_CONNECTION=sync
         ```
 
-4.  **Run Database Migrations:** Create the `products` table in your configured database.
+4.  **Run Database Migrations & Seed:** Create the `customers` and `orders` tables and add a sample customer.
     ```bash
-    php artisan migrate
+    php artisan migrate:fresh --seed --seeder=CustomerSeeder
     ```
-    *(Note: If you encounter issues or want a clean start, you can use `php artisan migrate:fresh` to drop all tables and re-migrate)*
+    *(Alternatively, run `php artisan migrate:fresh` and then `php artisan db:seed --class=CustomerSeeder`)*
 
 5.  **Start the Development Server:**
     ```bash
@@ -69,19 +72,18 @@ This project provides basic CRUD functionality for a `Product` resource. It demo
 
 **Base URL:** `http://127.0.0.1:8080/api` (Assuming server running on port 8080)
 
-| Method      | URL                     | Description            | Request Body (JSON)                   | Success Response (JSON)                  |
-| :---------- | :---------------------- | :--------------------- | :------------------------------------ | :--------------------------------------- |
-| **GET**     | `/products`             | List all products      | *N/A*                                 | Array of product objects                 |
-| **POST**    | `/products`             | Create a new product   | `{ "name": "...", "price": ... }`    | Created product object (Status `201`)    |
-| **GET**     | `/products/{product}`   | Show specific product  | *N/A*                                 | Single product object                    |
-| **PUT/PATCH** | `/products/{product}`   | Update a product     | `{ "name": "...", "price": ... }`    | Updated product object                   |
-| **DELETE**  | `/products/{product}`   | Delete a product     | *N/A*                                 | *Empty* (Status `204`)                   |
+| Method      | URL                     | Description                  | Request Body (JSON)                       | Success Response (JSON)                                     |
+| :---------- | :---------------------- | :--------------------------- | :---------------------------------------- | :---------------------------------------------------------- |
+| **GET**     | `/orders`               | List all orders              | *N/A*                                     | Array of order objects (with customer)                      |
+| **POST**    | `/orders`               | Create a new order           | `{ "customer_id":.., "product_name":.., "quantity":.., "price":.. }` | Created order object (with customer) (Status `201`)       |
+| **PUT**     | `/orders/{order}`       | Update an order's status     | `{ "status": "shipped" }`                 | Updated order object (with customer)                        |
+| **GET**     | `/orders/stats`         | Get order stats by status    | *N/A*                                     | `{ "stats_by_status": [...], "overall_total_revenue": ... }` |
 
-*(Replace `{product}` with the actual ID of the product)*
+*(Replace `{order}` with the actual ID of the order)*
 
 **Headers:**
-*   For `GET`, `DELETE`: `Accept: application/json`
-*   For `POST`, `PUT`, `PATCH`: `Accept: application/json`, `Content-Type: application/json`
+*   For `GET`: `Accept: application/json`
+*   For `POST`, `PUT`: `Accept: application/json`, `Content-Type: application/json`
 
 ## Key Technologies
 
