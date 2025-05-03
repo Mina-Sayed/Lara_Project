@@ -1,61 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Product API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple RESTful API built with Laravel 12 to manage products (Create, Read, Update, Delete).
 
-## About Laravel
+## Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This project provides basic CRUD functionality for a `Product` resource. It demonstrates core Laravel concepts including Eloquent models, resource controllers, routing, migrations, and environment configuration.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+*   **List Products:** Retrieve all products.
+*   **Create Product:** Add a new product with name and price.
+*   **Show Product:** View details of a specific product.
+*   **Update Product:** Modify the name and price of an existing product.
+*   **Delete Product:** Remove a product.
+*   **Validation:** Ensures `name` (required, string) and `price` (required, numeric) are provided correctly.
 
-## Learning Laravel
+## Setup Instructions
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/Mina-Sayed/Lara_Project.git](https://github.com/Mina-Sayed/Lara_Project.git)
+    cd Lara_Project
+    ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2.  **Install Dependencies:**
+    ```bash
+    composer install
+    npm install # Optional, if you plan to use frontend assets
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3.  **Configure Environment:**
+    *   Copy the example environment file:
+        ```bash
+        cp .env.example .env
+        ```
+    *   Generate an application key:
+        ```bash
+        php artisan key:generate
+        ```
+    *   **Edit the `.env` file** and update the `DB_` variables to match your database credentials (e.g., for PostgreSQL):
+        ```dotenv
+        DB_CONNECTION=pgsql
+        DB_HOST=127.0.0.1 # Or your database host (e.g., Railway URL)
+        DB_PORT=5432      # Or your database port
+        DB_DATABASE=your_db_name
+        DB_USERNAME=your_db_user
+        DB_PASSWORD=your_db_password
 
-## Laravel Sponsors
+        # Ensure these are set to avoid database dependency issues
+        SESSION_DRIVER=file
+        CACHE_STORE=file
+        QUEUE_CONNECTION=sync
+        ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4.  **Run Database Migrations:** Create the `products` table in your configured database.
+    ```bash
+    php artisan migrate
+    ```
+    *(Note: If you encounter issues or want a clean start, you can use `php artisan migrate:fresh` to drop all tables and re-migrate)*
 
-### Premium Partners
+5.  **Start the Development Server:**
+    ```bash
+    php artisan serve --port=8080 # Or any available port
+    ```
+    The API will typically be available at `http://127.0.0.1:8080`.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+## API Endpoints
 
-## Contributing
+**Base URL:** `http://127.0.0.1:8080/api` (Assuming server running on port 8080)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Method      | URL                     | Description            | Request Body (JSON)                   | Success Response (JSON)                  |
+| :---------- | :---------------------- | :--------------------- | :------------------------------------ | :--------------------------------------- |
+| **GET**     | `/products`             | List all products      | *N/A*                                 | Array of product objects                 |
+| **POST**    | `/products`             | Create a new product   | `{ "name": "...", "price": ... }`    | Created product object (Status `201`)    |
+| **GET**     | `/products/{product}`   | Show specific product  | *N/A*                                 | Single product object                    |
+| **PUT/PATCH** | `/products/{product}`   | Update a product     | `{ "name": "...", "price": ... }`    | Updated product object                   |
+| **DELETE**  | `/products/{product}`   | Delete a product     | *N/A*                                 | *Empty* (Status `204`)                   |
 
-## Code of Conduct
+*(Replace `{product}` with the actual ID of the product)*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Headers:**
+*   For `GET`, `DELETE`: `Accept: application/json`
+*   For `POST`, `PUT`, `PATCH`: `Accept: application/json`, `Content-Type: application/json`
 
-## Security Vulnerabilities
+## Key Technologies
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+*   PHP
+*   Laravel 12
+*   Composer
+*   PostgreSQL (or other configured SQL database)
